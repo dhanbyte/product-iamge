@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f5f7fb">
-  <meta name="description" content="Browse the Shopwave Wholesale product catalogue. Search products, compare catalogue prices, and build an enquiry list.">
-  <title>Shopwave Wholesale | Product Catalogue</title>
+  <meta name="description" content="Browse the Ecomhub product catalogue. Search products, compare catalogue prices, and build an enquiry list.">
+  <title>Ecomhub | Product Catalogue</title>
   <link rel="preload" href="styles.css" as="style">
   <link rel="stylesheet" href="styles.css">
   <script defer src="data.js"></script>
@@ -15,9 +15,9 @@
   <a class="skip-link" href="#catalog">Skip to products</a>
 
   <header class="site-header">
-    <a class="brand" href="#top" aria-label="Shopwave Wholesale home">
-      <span class="brand-mark" aria-hidden="true">S</span>
-      <span class="brand-name"><strong>SHOPWAVE</strong><small>WHOLESALE</small></span>
+    <a class="brand" href="#top" aria-label="Ecomhub product catalogue home">
+      <span class="brand-mark" aria-hidden="true">E</span>
+      <span class="brand-name"><strong>ECOMHUB</strong><small>WHOLESALE</small></span>
     </a>
     <button class="list-button" id="open-list" type="button" aria-haspopup="dialog" aria-controls="list-panel">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h15l-1.5 9h-12L5 6Zm0 0-.7-3H2M9 19.5a.5.5 0 1 0 0 .01M17 19.5a.5.5 0 1 0 0 .01"/></svg>
@@ -41,7 +41,7 @@
       <div class="hero-art" aria-hidden="true">
         <span class="art-ring ring-one"></span><span class="art-ring ring-two"></span>
         <span class="art-orb orb-one"></span><span class="art-orb orb-two"></span>
-        <span class="art-tag">SW<span>✳</span></span>
+        <span class="art-tag">E<span>✳</span></span>
       </div>
       <span class="hero-grain" aria-hidden="true"></span>
     </section>
@@ -90,7 +90,7 @@
         <p>Try another search or choose a different category.</p>
         <button class="text-button" id="reset-filters" type="button">Show all products</button>
       </div>
-      <div class="load-more-wrap"><button class="load-more" id="load-more" type="button">Show more products <span aria-hidden="true">↓</span></button></div>
+      <nav class="pagination-wrap" id="pagination" aria-label="Product pages" hidden></nav>
     </section>
 
     <section class="price-note" aria-label="Price information">
@@ -100,7 +100,7 @@
   </main>
 
   <footer class="site-footer">
-    <a class="footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">S</span> Shopwave Wholesale</a>
+    <a class="footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">E</span> Ecomhub Wholesale</a>
     <span>Product catalogue</span>
   </footer>
 

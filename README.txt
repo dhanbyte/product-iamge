@@ -1,4 +1,4 @@
-SHOPWAVE WHOLESALE CATALOGUE
+ECOMHUB WHOLESALE CATALOGUE
 
 Open index.html in a modern browser. The catalogue is static and works without
 installing packages or connecting to a server. Keep the assets folder, data.js,

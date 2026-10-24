@@ -1,4 +1,4 @@
-# product-iamge
+# Ecomhub Product Catalogue
 
 Static, mobile-first wholesale product catalogue built with HTML, CSS, and JavaScript.
 
@@ -9,7 +9,8 @@ Open `index.html` in a modern browser. The site has no build step or external pa
 ## Included features
 
 - Search 1,456 products across 15 categories.
-- Filter by category and sort by price or name.
+- Filter by category, browse with previous/next page navigation, and sort by price or name.
+- Search across product names, categories, and catalogue prices; multiple search words can be entered together.
 - Add products to a saved enquiry list and adjust quantities.
 - Use **Share enquiry list** to open WhatsApp for **+91 8249918763** with each selected product's name, quantity, unit price, line total, estimated total, and the catalogue price note pre-filled. Review the message and press Send in WhatsApp.
 - Product photos are optimized WebP files and load as the catalogue is browsed.

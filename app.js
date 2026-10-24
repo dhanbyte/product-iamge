@@ -13,12 +13,14 @@
   const productById = new Map(products.map((product) => [product.id, product]));
   const categoryCounts = new Map();
   products.forEach((product) => categoryCounts.set(product.category, (categoryCounts.get(product.category) || 0) + 1));
+  const categoryNames = [...categoryCounts.keys()];
+  const searchIndex = products.map((product) => normalizeSearch(`${product.name} ${product.category} ${product.price} ${money.format(product.price)}`));
 
   const state = {
     category: "All products",
     query: "",
     sort: "featured",
-    visible: PAGE_SIZE,
+    page: 1,
     shortlist: readShortlist(),
     toastTimer: 0,
     previousFocus: null,
@@ -33,6 +35,15 @@
 
   function escapeHTML(value) {
     return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  }
+
+  function normalizeSearch(value) {
+    return String(value ?? "")
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase("en-IN")
+      .replace(/[^\p{L}\p{N}]+/gu, " ")
+      .trim();
   }
 
   function readShortlist() {
@@ -53,9 +64,8 @@
   }
 
   function renderCategories() {
-    const names = ["All products", ...catalog.categories.filter((name) => categoryCounts.has(name))];
-    const totalCategories = names.length - 1;
-    $("#category-count").textContent = `${totalCategories} categories`;
+    const names = ["All products", ...categoryNames];
+    $("#category-count").textContent = `${categoryNames.length} categories`;
     categoryList.innerHTML = names.map((name) => {
       const count = name === "All products" ? products.length : categoryCounts.get(name);
       return `<button class="category-chip" type="button" data-category="${escapeHTML(name)}" aria-pressed="${name === state.category}">
@@ -65,10 +75,10 @@
   }
 
   function filteredProducts() {
-    const query = state.query.trim().toLocaleLowerCase();
-    let result = products.filter((product) => {
+    const queryParts = normalizeSearch(state.query).split(/\s+/).filter(Boolean);
+    let result = products.filter((product, index) => {
       const matchesCategory = state.category === "All products" || product.category === state.category;
-      const matchesQuery = !query || `${product.name} ${product.category}`.toLocaleLowerCase().includes(query);
+      const matchesQuery = !queryParts.length || queryParts.every((part) => searchIndex[index].includes(part));
       return matchesCategory && matchesQuery;
     });
     if (state.sort === "price-asc") result = [...result].sort((a, b) => a.price - b.price || a.name.localeCompare(b.name));
@@ -102,17 +112,36 @@
 
   function renderProducts() {
     const result = filteredProducts();
-    const shown = result.slice(0, state.visible);
+    const pageCount = Math.max(1, Math.ceil(result.length / PAGE_SIZE));
+    state.page = Math.min(Math.max(1, state.page), pageCount);
+    const start = (state.page - 1) * PAGE_SIZE;
+    const shown = result.slice(start, start + PAGE_SIZE);
     productGrid.innerHTML = shown.map(cardMarkup).join("");
     const empty = result.length === 0;
     $("#empty-state").hidden = !empty;
     productGrid.hidden = empty;
-    $(".load-more-wrap").hidden = empty || shown.length >= result.length;
+    $("#pagination").hidden = empty || pageCount <= 1;
     $("#results-count").innerHTML = result.length
-      ? `Showing <strong>${shown.length}</strong> of <strong>${result.length.toLocaleString("en-IN")}</strong> products`
+      ? `Showing <strong>${(start + 1).toLocaleString("en-IN")}-${(start + shown.length).toLocaleString("en-IN")}</strong> of <strong>${result.length.toLocaleString("en-IN")}</strong> products`
       : "No matching products";
-    const remaining = result.length - shown.length;
-    $("#load-more").innerHTML = `Show ${Math.min(PAGE_SIZE, remaining)} more products <span aria-hidden="true">↓</span>`;
+    renderPagination(pageCount);
+  }
+
+  function renderPagination(pageCount) {
+    if (pageCount <= 1) {
+      $("#pagination").innerHTML = "";
+      return;
+    }
+
+    const currentPage = state.page;
+    $("#pagination").innerHTML = `
+      <button class="page-button page-step" type="button" data-page="${currentPage - 1}" aria-label="Previous page"${currentPage === 1 ? " disabled" : ""}>
+        <span aria-hidden="true">←</span><span>Previous</span>
+      </button>
+      <span class="page-status" aria-live="polite">Page ${currentPage} of ${pageCount}</span>
+      <button class="page-button page-step" type="button" data-page="${currentPage + 1}" aria-label="Next page"${currentPage === pageCount ? " disabled" : ""}>
+        <span>Next</span><span aria-hidden="true">→</span>
+      </button>`;
   }
 
   function shortlistUnits() {
@@ -190,7 +219,7 @@
   }
 
   function enquiryText() {
-    const lines = ["Product enquiry - Shopwave Wholesale", ""];
+    const lines = ["Product enquiry - Ecomhub Wholesale", ""];
     let total = 0;
     let lineNumber = 1;
     for (const [id, quantity] of state.shortlist) {
@@ -210,7 +239,7 @@
     const button = event.target.closest("[data-category]");
     if (!button) return;
     state.category = button.dataset.category;
-    state.visible = PAGE_SIZE;
+    state.page = 1;
     renderCategories();
     renderProducts();
   });
@@ -231,7 +260,7 @@
 
   searchInput.addEventListener("input", () => {
     state.query = searchInput.value;
-    state.visible = PAGE_SIZE;
+    state.page = 1;
     $("#clear-search").hidden = !state.query;
     renderProducts();
   });
@@ -244,7 +273,7 @@
   $("#reset-filters").addEventListener("click", () => {
     state.category = "All products";
     state.query = "";
-    state.visible = PAGE_SIZE;
+    state.page = 1;
     searchInput.value = "";
     $("#clear-search").hidden = true;
     renderCategories();
@@ -252,12 +281,15 @@
   });
   sortSelect.addEventListener("change", () => {
     state.sort = sortSelect.value;
-    state.visible = PAGE_SIZE;
+    state.page = 1;
     renderProducts();
   });
-  $("#load-more").addEventListener("click", () => {
-    state.visible += PAGE_SIZE;
+  $("#pagination").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-page]");
+    if (!button || button.disabled) return;
+    state.page = Number(button.dataset.page);
     renderProducts();
+    $(".results-toolbar").scrollIntoView({ behavior: "smooth", block: "start" });
   });
   $("#open-list").addEventListener("click", openList);
   $("#close-list").addEventListener("click", closeList);
