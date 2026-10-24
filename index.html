@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="Browse the Shopwave Wholesale product catalogue. Search products, compare catalogue prices, and build an enquiry list.">
+  <title>Shopwave Wholesale | Product Catalogue</title>
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="data.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#catalog">Skip to products</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Shopwave Wholesale home">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span class="brand-name"><strong>SHOPWAVE</strong><small>WHOLESALE</small></span>
+    </a>
+    <button class="list-button" id="open-list" type="button" aria-haspopup="dialog" aria-controls="list-panel">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h15l-1.5 9h-12L5 6Zm0 0-.7-3H2M9 19.5a.5.5 0 1 0 0 .01M17 19.5a.5.5 0 1 0 0 .01"/></svg>
+      <span>My list</span><span class="list-count" id="list-count">0</span>
+    </button>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> WHOLESALE PRODUCT CATALOGUE</p>
+        <h1 id="hero-title">Everyday finds.<br><span>Wholesale made easy.</span></h1>
+        <p class="hero-note">Explore everyday essentials, gifts and more, all in one place.</p>
+        <div class="hero-meta">
+          <span class="product-total"><strong id="hero-total">—</strong> products to explore</span>
+          <span class="meta-divider" aria-hidden="true"></span>
+          <span><strong id="hero-category-total">—</strong> categories</span>
+        </div>
+        <a class="hero-cta" href="#catalog">Browse products <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13m-5-5 5 5-5 5"/></svg></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <span class="art-ring ring-one"></span><span class="art-ring ring-two"></span>
+        <span class="art-orb orb-one"></span><span class="art-orb orb-two"></span>
+        <span class="art-tag">SW<span>✳</span></span>
+      </div>
+      <span class="hero-grain" aria-hidden="true"></span>
+    </section>
+
+    <section class="catalog-shell" id="catalog" aria-labelledby="catalog-heading">
+      <div class="catalog-heading-row">
+        <div>
+          <p class="section-kicker">FIND YOUR NEXT BESTSELLER</p>
+          <h2 id="catalog-heading">Browse the catalogue</h2>
+        </div>
+        <span class="catalog-badge"><span class="status-dot"></span> Full catalogue</span>
+      </div>
+
+      <form class="search-wrap" id="search-form" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+        <label class="visually-hidden" for="search-input">Search products</label>
+        <input id="search-input" type="search" placeholder="Search products, e.g. lamp or toy" autocomplete="off" spellcheck="false">
+        <button class="clear-search" id="clear-search" type="button" aria-label="Clear search" hidden>×</button>
+        <kbd aria-hidden="true">⌕</kbd>
+      </form>
+
+      <div class="category-heading">
+        <h3>Shop by category</h3>
+        <span id="category-count" class="category-count"></span>
+      </div>
+      <nav class="category-list" id="category-list" aria-label="Product categories"></nav>
+
+      <div class="results-toolbar">
+        <p class="results-count" id="results-count" aria-live="polite">Loading catalogue…</p>
+        <label class="sort-wrap">
+          <span>Sort</span>
+          <select id="sort-select" aria-label="Sort products">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+            <option value="name">Name: A to Z</option>
+          </select>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg>
+        </label>
+      </div>
+
+      <div class="product-grid" id="product-grid" aria-live="polite"></div>
+      <div class="empty-state" id="empty-state" hidden>
+        <span class="empty-icon" aria-hidden="true">⌕</span>
+        <h3>No products found</h3>
+        <p>Try another search or choose a different category.</p>
+        <button class="text-button" id="reset-filters" type="button">Show all products</button>
+      </div>
+      <div class="load-more-wrap"><button class="load-more" id="load-more" type="button">Show more products <span aria-hidden="true">↓</span></button></div>
+    </section>
+
+    <section class="price-note" aria-label="Price information">
+      <span class="note-icon" aria-hidden="true">i</span>
+      <p><strong>Price note</strong><br>Catalogue prices may differ when placing an order.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="footer-brand" href="#top"><span class="brand-mark" aria-hidden="true">S</span> Shopwave Wholesale</a>
+    <span>Product catalogue</span>
+  </footer>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="list-panel" id="list-panel" role="dialog" aria-modal="true" aria-labelledby="list-title" aria-hidden="true">
+    <div class="panel-head">
+      <div><p class="section-kicker">YOUR SHORTLIST</p><h2 id="list-title">Enquiry list <span id="panel-count">(0)</span></h2></div>
+      <button class="icon-button" id="close-list" type="button" aria-label="Close enquiry list">×</button>
+    </div>
+    <div class="panel-body" id="panel-body"></div>
+    <div class="panel-footer" id="panel-footer">
+      <p class="panel-hint">Product names, quantities and catalogue prices will be added to a WhatsApp message.</p>
+      <a class="share-button is-disabled" id="send-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 11.7a8.3 8.3 0 0 1-12.2 7.4L4 20l.9-4a8.3 8.3 0 1 1 15.4-4.3Z"/><path d="M8.2 8.5c.2-.5.5-.5.8-.5h.4c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4 0 .6l-.5.6c-.2.2-.2.4 0 .6.5.8 1.2 1.4 2.1 1.8.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.5.7c.2.1.4.3.4.5 0 .4-.2 1.1-.7 1.5-.5.4-1 .6-1.6.5-.6-.1-1.3-.3-2.2-.7-1-.5-2-1.3-2.8-2.2-.8-.9-1.4-1.9-1.6-2.7-.2-.7-.1-1.4.1-1.7Z"/></svg>
+        Share enquiry list
+      </a>
+      <button class="clear-list" id="clear-list" type="button" disabled>Clear list</button>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
