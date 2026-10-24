@@ -219,7 +219,12 @@
   }
 
   function enquiryText() {
-    const lines = ["Product enquiry - Ecomhub Wholesale", ""];
+    const lines = [
+      "*Ecomhub Product Enquiry*",
+      "",
+      "Please confirm availability and final prices for:",
+      "",
+    ];
     let total = 0;
     let lineNumber = 1;
     for (const [id, quantity] of state.shortlist) {
@@ -228,10 +233,18 @@
       const lineTotal = product.price * quantity;
       total += lineTotal;
       lines.push(`${lineNumber}. ${product.name}`);
-      lines.push(`   Qty: ${quantity} | Unit price: ₹${money.format(product.price)} | Line total: ₹${money.format(lineTotal)}`);
+      lines.push(`   Qty: ${quantity} | Unit: ₹${money.format(product.price)} | Subtotal: ₹${money.format(lineTotal)}`);
+      lines.push("");
       lineNumber += 1;
     }
-    lines.push("", `Total items: ${shortlistUnits()}`, `Estimated catalogue total: ₹${money.format(total)}`, "Catalogue prices may differ when placing an order.");
+    lines.push(
+      "────────────────────",
+      `Products: ${lineNumber - 1}`,
+      `Total units: ${shortlistUnits()}`,
+      `Estimated total: ₹${money.format(total)}`,
+      "",
+      "Catalogue prices are indicative. Please confirm final pricing."
+    );
     return lines.join("\n");
   }
 
